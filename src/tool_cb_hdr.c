@@ -37,6 +37,14 @@
 
 static char *parse_filename(const char *ptr, size_t len);
 
+#ifdef WIN32
+#define BOLD
+#define BOLDOFF
+#else
+#define BOLD "\x1b[1m"
+#define BOLDOFF "\x1b[21m"
+#endif
+
 /*
 ** callback for CURLOPT_HEADERFUNCTION
 */
@@ -150,8 +158,6 @@ size_t tool_header_cb(char *ptr, size_t size, size_t nmemb, void *userdata)
   if(hdrcbdata->config->show_headers &&
      (protocol & (CURLPROTO_HTTP|CURLPROTO_HTTPS|CURLPROTO_RTSP))) {
     /* bold headers only happen for HTTP(S) and RTSP */
-#define BOLD "\x1b[1m"
-#define BOLDOFF "\x1b[21m"
     char *value = NULL;
 
     if(!outs->stream && !tool_create_output_file(outs, FALSE))
